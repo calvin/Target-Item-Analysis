@@ -50,4 +50,13 @@ def find_suspicious_data(matrix):
 
     rdma_suspects = [l == suspected_cluster for l in rdma_kmeans.labels_]
 
-    return rdma_suspects
+    degsim_kmeans = KMeans(2)
+    degsim_rv = degsim(matrix, 10)
+    degsim_kmeans.fit(degsim_rv)
+    count_0 = (degsim_kmeans.labels_ == 0).sum()
+    count_1 = len(degsim_kmeans.labels_) - count_0
+    suspected_cluster = 0 if count_0 > count_1 else 1
+
+    degsim_suspects = [l == suspected_cluster for l in degsim_kmeans.labels_]
+
+    return [x && y for x, y in zip(rdma_suspects, degsim_suspects)]
