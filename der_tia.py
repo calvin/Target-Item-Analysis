@@ -21,7 +21,7 @@ def degsim(matrix, k):
         return mean([pearson_correlation(matrix[x], matrix[y])[0]
             for x, y in combinations(hood, r=2)])
 
-    return [compute(hood) for hood in kneighbors]
+    return array([[compute(hood)] for hood in kneighbors])
 
 
 def rdma(matrix):
@@ -59,4 +59,4 @@ def find_suspicious_data(matrix):
 
     degsim_suspects = [l == suspected_cluster for l in degsim_kmeans.labels_]
 
-    return [x && y for x, y in izip(rdma_suspects, degsim_suspects)]
+    return [x and y for x, y in izip(rdma_suspects, degsim_suspects)]
