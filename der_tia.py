@@ -1,5 +1,5 @@
 from __future__ import division
-from itertools import combinations
+from itertools import combinations, izip
 
 from numpy import mean
 from numpy import array
@@ -59,4 +59,4 @@ def find_suspicious_data(matrix):
 
     degsim_suspects = [l == suspected_cluster for l in degsim_kmeans.labels_]
 
-    return [x && y for x, y in zip(rdma_suspects, degsim_suspects)]
+    return [x && y for x, y in izip(rdma_suspects, degsim_suspects)]
