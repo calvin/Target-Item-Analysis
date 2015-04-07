@@ -33,3 +33,21 @@ def rdma(matrix):
             for i, value in enumerate(row)])
 
     return array([[compute(row)] for row in matrix])
+
+
+def find_suspicious_data(matrix):
+    """Phase 1:
+    extract attributes using RMDA & DegSim' use k-menas (with `k`=2) to split
+    each group of attributes; choose the two greater parts, and we consider
+    the intersection between the two parts.
+    """
+    rdma_kmeans = KMeans(2)
+    rdma_rv = rdma(matrix)
+    rdma_kmeans.fit(rdma_rv)
+    count_0 = (rdma_kmeans.labels_ == 0).sum()
+    count_1 = len(rdma_kmeans.labels_) - count_0
+    suspected_cluster = 0 if count_0 > count_1 else 1
+
+    rdma_suspects = [l == suspected_cluster for l in rdma_kmeans.labels_]
+
+    return rdma_suspects
